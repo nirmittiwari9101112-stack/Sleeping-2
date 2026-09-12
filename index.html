@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Somnus — Sleep Science & Sleep Lab</title>
+<style>
+:root{
+  --bg:#07111f; --panel:#0e1c30; --panel2:#12243c; --text:#edf5ff; --muted:#9eb0c7;
+  --accent:#7dd3fc; --accent2:#a78bfa; --good:#6ee7b7; --warn:#fbbf24; --danger:#fb7185;
+  --border:rgba(255,255,255,.09); --shadow:0 20px 60px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+radial-gradient(circle at 10% 0%,#172d52 0,transparent 35%),radial-gradient(circle at 90% 10%,#241b4d 0,transparent 32%),var(--bg);color:var(--text);line-height:1.55}
+nav{position:sticky;top:0;z-index:20;background:rgba(7,17,31,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.navin{max-width:1180px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-weight:800;letter-spacing:.5px;font-size:20px}.logo span{color:var(--accent)}
+.navlinks{display:flex;gap:18px;flex-wrap:wrap}.navlinks a{color:var(--muted);text-decoration:none;font-size:14px}.navlinks a:hover{color:white}
+.container{max-width:1180px;margin:auto;padding:0 20px}
+.hero{padding:78px 0 45px;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+.badge{display:inline-flex;padding:7px 11px;border:1px solid var(--border);border-radius:99px;color:var(--accent);background:rgba(125,211,252,.07);font-size:13px}
+h1{font-size:clamp(42px,6vw,72px);line-height:1.02;margin:17px 0}.gradient{background:linear-gradient(100deg,#fff,#7dd3fc,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:18px;color:var(--muted);max-width:700px}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:750;cursor:pointer;background:linear-gradient(100deg,#7dd3fc,#a78bfa);color:#07111f}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+.hero-buttons{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.moon{height:300px;border-radius:30px;background:linear-gradient(145deg,rgba(125,211,252,.13),rgba(167,139,250,.08));border:1px solid var(--border);display:grid;place-items:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.moon:before{content:"";width:160px;height:160px;border-radius:50%;background:#dbeafe;box-shadow:0 0 70px #7dd3fc88;position:absolute}.moon:after{content:"";width:165px;height:165px;border-radius:50%;background:#07111f;transform:translate(38px,-20px);position:absolute}
+section{padding:58px 0}.section-title{font-size:34px;margin:0 0 9px}.section-sub{color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:rgba(14,28,48,.76);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--shadow)}.card h3{margin-top:0}.card p{color:var(--muted)}
+.pill{display:inline-block;padding:4px 9px;border-radius:99px;background:rgba(167,139,250,.12);color:#d8caff;font-size:12px;margin-bottom:10px}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px}.stage{padding:18px;border-radius:15px;border:1px solid var(--border);background:var(--panel2);min-height:150px}.stage b{color:var(--accent)}
+.cycle{height:250px;display:flex;align-items:center;gap:4px;margin:25px 0}.bar{height:55px;border-radius:10px;min-width:50px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.08);transition:.2s}.bar:hover{transform:translateY(-5px)}
+.n1{background:#31506e}.n2{background:#395d82}.n3{background:#315c55}.rem{background:#684e83}
+.theory-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.theory{position:relative}.theory .num{position:absolute;right:18px;top:16px;color:#ffffff28;font-size:42px;font-weight:900}
+.tech{display:grid;grid-template-columns:1fr 1fr;gap:20px}.tech-list{display:grid;gap:12px}.tech-item{padding:16px;border-radius:14px;background:var(--panel);border:1px solid var(--border)}.tech-item strong{display:block}.tech-item span{color:var(--muted);font-size:14px}
+.lab{background:linear-gradient(145deg,rgba(125,211,252,.08),rgba(167,139,250,.08));border:1px solid var(--border);border-radius:22px;padding:24px}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.field label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}.field input,.field select{width:100%;padding:12px;background:#081426;color:white;border:1px solid var(--border);border-radius:10px}
+.dashboard{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-top:20px}.chartbox,.scorebox{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:18px}.score{font-size:54px;font-weight:850;color:var(--good)}.metric{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);color:var(--muted)}.metric b{color:white}
+canvas{width:100%;height:300px;display:block}
+.alert{padding:14px;border-radius:12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:#fde68a;font-size:13px;margin-top:14px}
+.instructions{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.instruction{padding:18px;border-left:3px solid var(--accent);background:var(--panel)}
+.sources{font-size:13px;color:var(--muted)}.sources a{color:var(--accent)}footer{padding:40px 0;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+@media(max-width:850px){.hero,.dashboard,.tech{grid-template-columns:1fr}.grid,.instructions{grid-template-columns:1fr 1fr}.timeline{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr 1fr}.theory-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.navlinks{display:none}.grid,.instructions,.timeline,.form{grid-template-columns:1fr}.hero{padding-top:45px}}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px;color:var(--muted);font-size:14px}
+.legend span{display:flex;align-items:center;gap:7px}.swatch{width:18px;height:18px;border-radius:4px;display:inline-block}
+.swatch.wake{background:#f6cf72}.swatch.rem{background:#8fa9ff}.swatch.n1{background:#7f95c9}.swatch.n2{background:#4e67b0}.swatch.n3{background:#263a7c}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:rgba(125,211,252,.05);border:1px solid var(--border);border-radius:14px;padding:17px}.stat small{display:block;color:var(--muted);font-size:13px}.stat strong{display:block;font-size:27px;color:#f6cf72;margin-top:4px}
+.interpretation{display:grid;gap:0}.interp{padding:15px 0;border-bottom:1px solid var(--border)}.interp:last-child{border-bottom:0}.interp strong{display:block;font-size:16px}.interp span{color:var(--muted)}
+</style>
+</head>
+<body>
+<nav><div class="navin">
+  <div class="logo">SOMNUS<span>•</span>LAB</div>
+  <div class="navlinks">
+    <a href="#stages">Stages</a><a href="#theories">Theories</a><a href="#technology">Technology</a><a href="#lab">Sleep Lab</a><a href="#health">Health</a>
+  </div>
+</div></nav>
+
+<main>
+<div class="container">
+<section class="hero">
+ <div>
+  <span class="badge">Interactive Sleep Science Website</span>
+  <h1>Understand your <span class="gradient">night.</span></h1>
+  <p class="lead">Explore how scientists explain sleep, how NREM and REM cycles work, and how modern technology measures sleep. Then use the built-in Sleep Lab to create an educational estimate of a night’s sleep architecture.</p>
+  <div class="hero-buttons"><a class="btn" href="#lab">Open Sleep Lab</a><a class="btn secondary" href="#theories">Explore theories</a></div>
+ </div>
+ <div class="moon" aria-label="Moon illustration"></div>
+</section>
+
+<section id="stages">
+ <h2 class="section-title">The architecture of sleep</h2>
+ <p class="section-sub">Modern sleep scoring groups sleep into wakefulness, three NREM stages and REM sleep.</p>
+ <div class="timeline">
+  <div class="stage"><b>Wake</b><h3>Awake</h3><p>Transition into sleep or brief awakenings. Brain activity and movement are relatively high.</p></div>
+  <div class="stage"><b>N1</b><h3>Light sleep</h3><p>The transition from wakefulness to sleep. It is relatively easy to awaken from.</p></div>
+  <div class="stage"><b>N2</b><h3>Stable sleep</h3><p>Light-to-moderate sleep with characteristic EEG events such as sleep spindles and K-complexes.</p></div>
+  <div class="stage"><b>N3</b><h3>Deep sleep</h3><p>Slow-wave sleep. It is generally more prominent earlier in the night.</p></div>
+ </div>
+ <div class="card" style="margin-top:14px"><span class="pill">REM</span><h3>Rapid Eye Movement</h3><p>REM features active brain patterns, rapid eye movements and normally reduced skeletal-muscle tone. Dreaming can occur in both REM and NREM, although vivid dreams are especially common in REM. REM periods generally become longer later in the night.</p></div>
+ <div class="cycle" id="cycleVisual" title="Illustrative sleep-cycle sequence"></div>
+ <p class="section-sub">Illustration: a typical night repeatedly moves through NREM and REM. Individual nights vary; the diagram is not a diagnostic measurement.</p>
+</section>
+
+<section id="theories">
+ <h2 class="section-title">Why do we sleep?</h2>
+ <p class="section-sub">There is no single universally accepted explanation. Several complementary theories have been proposed.</p>
+ <div class="theory-grid">
+  <div class="card theory"><div class="num">01</div><span class="pill">1982</span><h3>Two-Process Model — Alexander Borbély</h3><p>Sleep timing can be understood through two interacting processes: a homeostatic sleep pressure that builds during wakefulness and a circadian process that creates a roughly 24-hour rhythm.</p></div>
+  <div class="card theory"><div class="num">02</div><span class="pill">1977</span><h3>Activation-Synthesis Hypothesis — Hobson &amp; McCarley</h3><p>Proposed that dreams arise when the sleeping brain attempts to make sense of internally generated neural activation, especially during REM sleep.</p></div>
+  <div class="card theory"><div class="num">03</div><span class="pill">Restoration</span><h3>Restorative Theory — Ian Oswald</h3><p>Sleep was proposed to support physical restoration and recovery. Modern research continues to investigate how sleep supports cellular, metabolic, immune and neural maintenance.</p></div>
+  <div class="card theory"><div class="num">04</div><span class="pill">Evolution</span><h3>Evolutionary / Adaptive Theory — William C. Dement &amp; others</h3><p>Adaptive explanations propose that sleep evolved because inactivity at biologically appropriate times can conserve energy and reduce exposure to environmental hazards.</p></div>
+  <div class="card theory"><div class="num">05</div><span class="pill">1953</span><h3>Discovery of REM Sleep — Aserinsky &amp; Kleitman</h3><p>Eugene Aserinsky and Nathaniel Kleitman identified periods of rapid eye movements during sleep, helping establish REM as a distinct physiological state.</p></div>
+  <div class="card theory"><div class="num">06</div><span class="pill">AASM</span><h3>Modern Staging System</h3><p>Modern clinical scoring divides sleep into Wake, N1, N2, N3 and REM using physiological signals such as EEG, EOG and EMG. The AASM publishes standardized scoring rules.</p></div>
+  <div class="card theory"><div class="num">07</div><span class="pill">Memory</span><h3>Memory Consolidation</h3><p>Sleep supports learning and memory by helping process, stabilize and integrate information acquired while awake. Different sleep states may contribute in different ways.</p></div>
+  <div class="card theory"><div class="num">08</div><span class="pill">Synapses</span><h3>Synaptic Homeostasis Hypothesis</h3><p>One influential hypothesis suggests sleep helps restore synaptic balance after the accumulation of neural connections and activity during wakefulness.</p></div>
+ </div>
+</section>
+
+<section id="technology">
+ <h2 class="section-title">How scientists measure sleep today</h2>
+ <p class="section-sub">Clinical sleep studies combine multiple physiological signals. Consumer devices usually estimate sleep indirectly.</p>
+ <div class="tech">
+  <div class="tech-list">
+   <div class="tech-item"><strong>EEG — Electroencephalography</strong><span>Measures electrical brain activity and is central to distinguishing sleep stages.</span></div>
+   <div class="tech-item"><strong>EOG — Electrooculography</strong><span>Records eye movements, helping identify REM and other sleep characteristics.</span></div>
+   <div class="tech-item"><strong>EMG — Electromyography</strong><span>Measures muscle activity; reduced muscle tone is a defining feature of REM sleep.</span></div>
+   <div class="tech-item"><strong>ECG / heart-rate signals</strong><span>Provides cardiovascular information that can complement sleep staging and clinical assessment.</span></div>
+  </div>
+  <div class="tech-list">
+   <div class="tech-item"><strong>Respiratory sensors</strong><span>Airflow, breathing effort and oxygen saturation can be monitored, especially when sleep-disordered breathing is suspected.</span></div>
+   <div class="tech-item"><strong>Actigraphy</strong><span>Movement-based monitoring can estimate sleep/wake patterns over longer periods.</span></div>
+   <div class="tech-item"><strong>PPG & wearable sensors</strong><span>Watches and rings may use optical pulse signals, movement and other sensors to estimate sleep metrics.</span></div>
+   <div class="tech-item"><strong>Polysomnography (PSG)</strong><span>A comprehensive clinical sleep study combining signals such as EEG, EOG, EMG and breathing measurements.</span></div>
+  </div>
+ </div>
+</section>
+
+<section id="lab">
+ <h2 class="section-title">Night Watch: see your sleep, understand your night</h2>
+ <p class="section-sub">Enter your bedtime and wake time to generate a modeled hypnogram of your night — showing REM, light and deep sleep stages — along with a health read-out and practical guidance.</p>
+ <div class="lab">
+  <div class="form">
+   <div class="field"><label>Bedtime</label><input id="bedtime" type="time" value="23:00"></div>
+   <div class="field"><label>Wake time</label><input id="waketime" type="time" value="07:00"></div>
+   <div class="field"><label>Times woken up</label><input id="awakenings" type="number" min="0" max="20" value="1"></div>
+   <div class="field"><label>Sleep quality (1–10)</label><input id="quality" type="number" min="1" max="10" value="8"></div>
+  </div>
+  <div style="margin-top:15px"><button class="btn" onclick="runLab()">Generate my sleep cycle</button></div>
+  <p class="section-sub" style="margin:15px 0 0">This models a realistic night from your times — not a diagnosis. For real stage data, sleep needs to be measured directly using the techniques below.</p>
+  <div class="card" style="margin-top:20px">
+   <h3 style="font-family:Georgia,serif;font-size:30px;margin-top:0">Your hypnogram</h3>
+   <canvas id="hypnogram" width="900" height="320"></canvas>
+   <div class="legend" id="legend">
+     <span><i class="swatch wake"></i>Wake</span>
+     <span><i class="swatch rem"></i>REM</span>
+     <span><i class="swatch n1"></i>Light (N1)</span>
+     <span><i class="swatch n2"></i>Light (N2)</span>
+     <span><i class="swatch n3"></i>Deep (N3)</span>
+   </div>
+   <p class="section-sub" style="margin:12px 0 0">Illustrative model based on your schedule and inputs. It does not directly detect your brain waves.</p>
+ </div>
+
+ <div class="card" style="margin-top:18px">
+   <h3 style="font-family:Georgia,serif;font-size:30px;margin-top:0">Sleep stats</h3>
+   <div class="stats-grid">
+     <div class="stat"><small>Sleep time</small><strong id="statTime">—</strong></div>
+     <div class="stat"><small>Sleep efficiency</small><strong id="statEff">—</strong></div>
+     <div class="stat"><small>Cycles</small><strong id="statCycles">—</strong></div>
+     <div class="stat"><small>REM</small><strong id="statRem">—</strong></div>
+     <div class="stat"><small>N2</small><strong id="statN2">—</strong></div>
+     <div class="stat"><small>N3 deep</small><strong id="statN3">—</strong></div>
+   </div>
+ </div>
+
+ <div class="card" style="margin-top:18px">
+   <h3 style="font-family:Georgia,serif;font-size:30px;margin-top:0">What this means &amp; what to do</h3>
+   <div id="interpretation" class="interpretation"></div>
+ </div>
+
+ <div class="dashboard">
+   <div class="chartbox"><h3>Estimated sleep-stage distribution</h3><canvas id="sleepChart" width="800" height="300"></canvas></div>
+   <div class="scorebox">
+    <h3>Wellness score</h3><div class="score" id="score">—</div>
+    <div class="metric"><span>Total sleep</span><b id="mHours">—</b></div>
+    <div class="metric"><span>Estimated NREM</span><b id="mNrem">—</b></div>
+    <div class="metric"><span>Estimated REM</span><b id="mRem">—</b></div>
+    <div class="metric"><span>Awakenings</span><b id="mAwake">—</b></div>
+    <div class="alert">This simulator does not measure your brain waves or diagnose a sleep disorder. For actual sleep-stage measurement, clinical polysomnography uses physiological sensors and professional scoring.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section id="health">
+ <h2 class="section-title">Sleep-health instructions</h2>
+ <p class="section-sub">Use these as general sleep-hygiene guidance, not as a substitute for medical care.</p>
+ <div class="instructions">
+  <div class="instruction"><h3>Keep a schedule</h3><p>Try to keep consistent sleep and wake times, including on days off.</p></div>
+  <div class="instruction"><h3>Protect your sleep environment</h3><p>Keep the bedroom comfortable, dark and quiet, and reduce disruptive light and noise.</p></div>
+  <div class="instruction"><h3>Watch stimulants</h3><p>Caffeine and bright light late in the day can interfere with sleep timing for some people.</p></div>
+  <div class="instruction"><h3>Move during the day</h3><p>Regular physical activity can support healthy sleep, while very intense exercise immediately before bed may not suit everyone.</p></div>
+  <div class="instruction"><h3>Don't obsess over scores</h3><p>Wearable sleep-stage estimates have limitations. Look at trends rather than treating a nightly score as a diagnosis.</p></div>
+  <div class="instruction"><h3>Know when to seek help</h3><p>Persistent insomnia, loud snoring with breathing pauses, severe daytime sleepiness or other concerning symptoms deserve professional evaluation.</p></div>
+ </div>
+</section>
+
+<section>
+ <h2 class="section-title">Scientific notes</h2>
+ <div class="card sources">
+  <p><b>Core references:</b></p>
+  <p>National Heart, Lung, and Blood Institute (NIH), <a href="https://www.nhlbi.nih.gov/health/sleep/stages-of-sleep" target="_blank" rel="noopener">How Sleep Works — Sleep Phases and Stages</a>.</p>
+  <p>NICHD (NIH), <a href="https://www.nichd.nih.gov/health/topics/sleep" target="_blank" rel="noopener">About Sleep</a>.</p>
+  <p>National Institute of Mental Health, <a href="https://www.nimh.nih.gov/research/research-funded-by-nimh/rdoc/constructs/sleep-wakefulness" target="_blank" rel="noopener">Sleep-Wakefulness</a>.</p>
+  <p>American Academy of Sleep Medicine, <a href="https://aasm.org/advocacy/position-statements/consumer-sleep-technology/" target="_blank" rel="noopener">Consumer Sleep Technology position statement</a>.</p>
+ </div>
+</section>
+</div>
+</main>
+
+<footer><div class="container">Somnus Lab • Educational sleep-science prototype • Not a medical device or diagnostic tool.</div></footer>
+
+<script>
+const cycle = document.getElementById('cycleVisual');
+const sequence = [
+ ['N1',1.0,'n1'],['N2',2.8,'n2'],['N3',2.6,'n3'],['REM',1.3,'rem'],
+ ['N2',2.2,'n2'],['N3',1.9,'n3'],['REM',1.7,'rem'],
+ ['N2',2.0,'n2'],['N3',1.2,'n3'],['REM',2.1,'rem'],
+ ['N2',1.6,'n2'],['REM',2.7,'rem']
+];
+sequence.forEach(x=>{const d=document.createElement('div');d.className='bar '+x[2];d.style.flex=x[1];d.textContent=x[0];cycle.appendChild(d)});
+
+function parseDuration(){
+ const b=document.getElementById('bedtime').value, w=document.getElementById('waketime').value;
+ if(!b||!w) return 7;
+ const [bh,bm]=b.split(':').map(Number), [wh,wm]=w.split(':').map(Number);
+ let mins=(wh*60+wm)-(bh*60+bm); if(mins<=0) mins+=1440;
+ return mins/60;
+}
+function fmtHours(h){
+ const total=Math.round(h*60), hh=Math.floor(total/60), mm=total%60;
+ return hh+'h '+String(mm).padStart(2,'0')+'m';
+}
+function runLab(){
+ const h=Math.max(3,Math.min(12,parseDuration()));
+ const q=Math.max(1,Math.min(10,parseInt(document.getElementById('quality').value)||8));
+ const aw=Math.max(0,parseInt(document.getElementById('awakenings').value)||0);
+
+ // Educational proportions; deliberately not presented as measured physiology.
+ let rem=0.21 + (q-5)*0.003;
+ let deep=0.15 + (q-5)*0.006;
+ deep=Math.max(.07,Math.min(.25,deep)); rem=Math.max(.15,Math.min(.28,rem));
+ let n2=.50, n1=1-deep-rem-n2;
+ n1=Math.max(.04,n1);
+ const total=n1+n2+deep+rem; n1/=total;n2/=total;deep/=total;rem/=total;
+
+ const efficiency=Math.max(70,Math.min(99,Math.round(100-(aw*1.7)-Math.max(0,7-h)*3)));
+ const score=Math.max(0,Math.min(100,Math.round(45+h*5+q*2-aw*3-Math.max(0,7-h)*7)));
+ const cycles=Math.max(3,Math.min(7,Math.round(h/1.5)));
+
+ document.getElementById('score').textContent=score;
+ document.getElementById('mHours').textContent=fmtHours(h);
+ document.getElementById('mNrem').textContent=((n1+n2+deep)*100).toFixed(0)+'%';
+ document.getElementById('mRem').textContent=(rem*100).toFixed(0)+'%';
+ document.getElementById('mAwake').textContent=aw;
+ document.getElementById('statTime').textContent=fmtHours(h);
+ document.getElementById('statEff').textContent=efficiency+'%';
+ document.getElementById('statCycles').textContent=cycles;
+ document.getElementById('statRem').textContent=(rem*100).toFixed(0)+'%';
+ document.getElementById('statN2').textContent=(n2*100).toFixed(0)+'%';
+ document.getElementById('statN3').textContent=(deep*100).toFixed(0)+'%';
+
+ const interp=[];
+ if(h>=7 && h<=9) interp.push(['Duration looks solid',fmtHours(h)+' falls in the 7–9 hour range commonly recommended for most adults.']);
+ else if(h<7) interp.push(['Short sleep duration',fmtHours(h)+' is below the 7–9 hour range commonly recommended for most adults; consider protecting more sleep opportunity.']);
+ else interp.push(['Longer sleep opportunity',fmtHours(h)+' is above 9 hours. A single long night is not necessarily concerning, but persistent changes are worth discussing with a clinician if accompanied by symptoms.']);
+ if(efficiency>=90) interp.push(['Good sleep efficiency','The model estimates '+efficiency+'% of your time in bed is spent asleep. This is an estimate, not a measured clinical value.']);
+ else interp.push(['Interrupted night','The number of awakenings lowers the simulated efficiency. If frequent awakenings persist or affect daytime function, consider professional advice.']);
+ interp.push(['General sleep hygiene','Keep a consistent wake time, protect a dark and quiet bedroom, and limit stimulating light and caffeine close to bedtime.']);
+ document.getElementById('interpretation').innerHTML=interp.map(x=>`<div class="interp"><strong>✓ ${x[0]}</strong><span>${x[1]}</span></div>`).join('');
+
+ drawHypnogram(h,n1,n2,deep,rem,aw);
+ drawChart([n1,n2,deep,rem],h);
+}
+function drawHypnogram(h,n1,n2,deep,rem,aw){
+ const c=document.getElementById('hypnogram'),ctx=c.getContext('2d');
+ const dpr=devicePixelRatio||1, rect=c.getBoundingClientRect();
+ c.width=Math.max(320,rect.width*dpr);c.height=320*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+ const W=Math.max(320,rect.width), H=320, left=48, right=15, top=25, bottom=48;
+ ctx.clearRect(0,0,W,H);
+ const y={Wake:top,N1:top+58,N2:top+116,N3:top+174,REM:top+58};
+ const labels=[['Wake',y.Wake],['REM',y.REM],['N1',y.N1],['N2',y.N2],['N3',y.N3]];
+ ctx.font='12px system-ui';
+ labels.forEach(([lab,yy])=>{ctx.fillStyle='#9eb0c7';ctx.fillText(lab,7,yy+4);ctx.strokeStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.moveTo(left,yy);ctx.lineTo(W-right,yy);ctx.stroke()});
+ const cols={Wake:'#f6cf72',REM:'#8fa9ff',N1:'#7f95c9',N2:'#4e67b0',N3:'#263a7c'};
+ // Create four broad cycles, with more deep sleep early and more REM late.
+ const cycles=Math.max(4,Math.min(6,Math.round(h/1.5)));
+ let segments=[];
+ for(let i=0;i<cycles;i++){
+   segments.push(['N1',.10]); segments.push(['N2',.46]);
+   segments.push(['N3',Math.max(.07,deep*(1-i/(cycles*1.35))*1.35)]);
+   segments.push(['N2',.10]);
+   segments.push(['REM',rem*(.72+i/(cycles*2.5))]);
+ }
+ const total=segments.reduce((s,x)=>s+x[1],0);
+ let x=left, last=null, lastY=null;
+ segments.forEach((s,idx)=>{
+   const yy=y[s[0]], nx=left+(W-left-right)*(segments.slice(0,idx+1).reduce((a,z)=>a+z[1],0)/total);
+   if(last!==null){
+     ctx.strokeStyle=cols[s[0]];ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,lastY);ctx.lineTo(x,yy);ctx.lineTo(nx,yy);ctx.stroke();
+   } else {
+     ctx.strokeStyle=cols[s[0]];ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(nx,yy);ctx.stroke();
+   }
+   last=s[0];lastY=yy;x=nx;
+ });
+ // A few brief awakenings, distributed according to the user input.
+ for(let i=0;i<aw;i++){
+   const xx=left+(W-left-right)*((i+1)/(aw+1));
+   ctx.strokeStyle=cols.Wake;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(xx,y.N2);ctx.lineTo(xx,y.Wake);ctx.lineTo(xx+7,y.Wake);ctx.lineTo(xx+7,y.N2);ctx.stroke();
+ }
+ ctx.fillStyle='#9eb0c7';ctx.font='11px system-ui';
+ ctx.fillText('0h',left,H-15);ctx.fillText(fmtHours(h/2),W/2-20,H-15);ctx.fillText(fmtHours(h),W-right-42,H-15);
+}
+function drawChart(vals,h){
+ const c=document.getElementById('sleepChart'),ctx=c.getContext('2d');
+ const dpr=devicePixelRatio||1; const rect=c.getBoundingClientRect(); c.width=rect.width*dpr;c.height=300*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+ const W=rect.width,H=300;ctx.clearRect(0,0,W,H);
+ const labels=['N1','N2','N3','REM'], classes=['#7f95c9','#4e67b0','#263a7c','#8fa9ff'];
+ const left=50,bottom=48,top=18,chartH=H-top-bottom,chartW=W-left-15;
+ ctx.font='13px system-ui';ctx.fillStyle='#9eb0c7';
+ [0,25,50,75,100].forEach(v=>{let y=top+chartH-(v/100)*chartH;ctx.strokeStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(W-15,y);ctx.stroke();ctx.fillText(v+'%',10,y+4)});
+ let x=left,gap=14,bw=(chartW-gap*3)/4;
+ vals.forEach((v,i)=>{let bh=v*chartH;ctx.fillStyle=classes[i];ctx.fillRect(x,top+chartH-bh,bw,bh);ctx.fillStyle='#edf5ff';ctx.fillText(labels[i],x+bw/2-10,H-20);ctx.fillText((v*100).toFixed(0)+'%',x+bw/2-13,top+chartH-bh-7);x+=bw+gap});
+}
+runLab(); window.addEventListener('resize',runLab);
+</script>
+</body>
+</html>
